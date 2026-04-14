@@ -1,6 +1,6 @@
 {
   "name": "wakametube",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "server.js",
   "license": "CC-BY-4.0",
   "dependencies": {
@@ -13,13 +13,12 @@
     "cookie-parser": "^1.4.7",
     "soundcloud-downloader": "^1.0.0",
     "youtubei.js": "latest",
-    "undici": "latest",
     "miniget": "latest",
     "cors": "^2.8.5"
   },
   "description": "wakame-tube-optimized",
   "engines": {
-    "node": "20.x"
+    "node": "22.x" 
   },
   "author": "wakame02",
   "scripts": {
