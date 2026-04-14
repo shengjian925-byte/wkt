@@ -19,7 +19,7 @@
   },
   "description": "wakame",
   "engines": {
-    "node": "20.x"
+    "node": "20.12.0"
   },
   "author": "wakame02",
   "bugs": {
