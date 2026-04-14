@@ -20,6 +20,7 @@ app.use(cors());
 app.set("trust proxy", 1);
 app.use(cookieParser());
 
+// ログインチェック
 app.use((req, res, next) => {
     if (req.cookies.loginok !== 'ok' && !req.path.includes('login') && !req.path.includes('back')) {
         return res.redirect('/login');
@@ -36,10 +37,6 @@ app.get('/', (req, res) => {
   }
 });
 
-app.get('/app', (req, res) => {
-  res.render("app/list");
-});
-
 app.use("/wkt", require("./routes/wakametube"));
 app.use("/game", require("./routes/game"));
 app.use("/tools", require("./routes/tools"));
@@ -51,47 +48,30 @@ app.get('/login', (req, res) => {
     res.render('home/login');
 });
 
-app.get('/watch', (req, res) => {
-  const videoId = req.query.v;
-  if (videoId) {
-    res.redirect(`/wkt/watch/${videoId}`);
-  } else {
-    res.redirect(`/wkt/trend`);
-  }
-});
-app.get('/channel/:id', (req, res) => {
-  const id = req.params.id;
-    res.redirect(`/wkt/c/${id}`);
-});
-app.get('/channel/:id/join', (req, res) => {
-  const id = req.params.id;
-  res.redirect(`/wkt/c/${id}`);
-});
-app.get('/hashtag/:des', (req, res) => {
-  const des = req.params.des;
-  res.redirect(`/wkt/s?q=${des}`);
-});
-
-app.use("/sandbox", require("./routes/sandbox"));
-
 app.use((req, res) => {
   res.status(404).render("error.ejs", {
     title: "404 Not found",
     content: "そのページは存在しません。",
   });
 });
-app.on("error", console.error);
+
 async function initInnerTube() {
   try {
-    client = await YouTubeJS.Innertube.create({ lang: "ja", location: "JP"});
+    // YouTube接続設定を最適化
+    client = await YouTubeJS.Innertube.create({ 
+        lang: "ja", 
+        location: "JP",
+        cache: new YouTubeJS.UniversalCache(false) 
+    });
     serverYt.setClient(client);
-    const listener = app.listen(process.env.PORT || 3000, () => {
-      console.log(process.pid, "Ready.", listener.address().port);
+    const port = process.env.PORT || 3000;
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`Ready on port ${port}`);
     });
   } catch (e) {
-    console.error(e);
+    console.error("YouTube Init Error:", e);
     setTimeout(initInnerTube, 10000);
   };
 };
-process.on("unhandledRejection", console.error);
+
 initInnerTube();
