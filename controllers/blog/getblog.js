@@ -38,7 +38,8 @@ router.get('/l/:id', async (req, res) => {
   if (blogData) {
     res.send(blogData);
   } else {
-    res.status(500).send('ブログ記事の取得に失敗しました');
+    res.status(500).send('<a href="URLを入れる">サイトへ行く</a>
+');
   }
 });
 
